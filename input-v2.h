@@ -4,6 +4,12 @@
 * 
 * Documentação: http://www.dirackslounge.online/C/bibliotecas_dirack/input.html
 *
+* Histórico de mudanças:
+*
+*		(Versão 2.0)
+*		-Acrescentada a função gettable para exibir a tabela de parâmetros 
+*		na tela do terminal.
+*
 * Funcionamento:
 * 	input.h constrói uma tabela simbólica de parâmetros. Para tanto, deve-se
 *	utilizar a função construtora da tabela, adicionando o comando 
@@ -22,11 +28,11 @@
 *
 *		tam(número de parâmetros)=3
 *		--------------------
-*		pars[0]	| par1="10"
+*		pars[1]	| par1="10"
 *		--------------------
-*		pars[1] | par2="2.34"
+*		pars[2] | par2="2.34"
 *		--------------------
-*		pars[2] | par3="4.32"
+*		pars[3] | par3="4.32"
 *		--------------------
 *
 *	Cada parâmetro é armazenado na forma chave="valor" e
@@ -37,7 +43,7 @@
 *	No comando acima o valor do parâmetro par2 passado pela linha de comandos será atribuído à
 *	variável p do tipo float. Se nenhum valor for passado, o valor de p será 0.
 *
-* Versão 1.0 
+* Versão 2.0 
 * 
 * Programador: Rodolfo A. C. Neves (Dirack) 23/11/2018
 *
@@ -91,6 +97,50 @@ void init(int tam, char **p){
 	tabela.tam=tam; // Tamanho da tabela
 	tabela.pars=&p[0]; // parâmetros
 		
+}
+
+void gettable(){
+/*< Exibir a tabela de parâmetros na tela >*/
+/*		**tabela de parâmetros**
+
+		tam(número de parâmetros)=3
+		--------------------
+		pars[1]	| par1="10"
+		--------------------
+		pars[2] | par2="2.34"
+		--------------------
+		pars[3] | par3="4.32"
+		--------------------
+*/
+
+	int i; 
+
+	printf("**tabela de parâmetros**\ntam(número de parâmetros)=%i\n",tabela.tam);
+
+	for (i=0;i<tabela.tam;i++){
+		printf("------------------------------\n");
+		printf("Parâmetro[%i] | %s\n",i,tabela.pars[i]);
+		
+	}
+
+	printf("------------------------------\n");
+}
+
+void erasetable(){
+/*< Apagar a tabela simbólica de parâmetros >*/
+
+	tabela.tam=0;
+
+	tabela.pars=NULL;
+}
+
+void puttable(char* string){
+/*< Inserir parâmetro na tabela de parâmetros >*/
+
+	tabela.pars[tabela.tam]=string;
+
+	tabela.tam++;
+
 }
 
 /*< Funções GET >*/
@@ -163,6 +213,28 @@ bool getdouble(char *string, double *pi) {
 		if(strcmp(string,str)==0) {
 			*pi=atof(strdlm_r(tabela.pars[i],"="));			
 			resp=true;
+			break;
+		}
+	}
+
+	return resp;
+}
+
+//XXX ERRo de segmentação na função abaixo!!!
+char *getstring(const char *string) {
+/*< Pesquisa parâmetro do tipo string na tabela de parâmetros >*/
+
+	char *str;
+	int i;
+	//bool resp=false;
+	char *resp;
+
+	for (i=1;i<tabela.tam;i++){
+
+		str=strdlm(tabela.pars[i],"=");
+		
+		if(strcmp(string,str)==0) {
+			strcpy(strdlm_r(tabela.pars[i],"="),resp);
 			break;
 		}
 	}
