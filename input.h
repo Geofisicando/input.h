@@ -75,6 +75,76 @@
 #ifndef _tabela_h
 #define _tabela_h
 
+char *istrdlm(char *string, char *delim){
+/*< Cortar uma string na posição do delimitador, semelhante ao 'cut' do Shell >*/
+	
+	int i; // contador de laço
+	int d=0; // posição do delimitador
+	int tam = strlen(string); // tamanho da string
+	char *str1; // string cortada
+
+	/* Verifica qual a posição do delimitador na string */
+	for(i=0;i<tam;i++){
+
+		if(string[i]==delim[0]){
+			break;
+		}
+
+		d++;	
+
+	}
+
+	char s1[d+1]; // string temporária
+
+	/* 's1' recebe um pedaço de 'string' */
+	for(i=0;i<d;i++){
+		s1[i]=string[i];
+	}
+
+	/* último caractere é NULL */
+	s1[d]='\0';
+
+	str1 = &s1[0];
+
+	return str1;
+}
+
+
+char *istrdlm_r(char *string, char *delim){
+/*< Variação de strdlm. Porém, retorna o campo após o delimitador >*/	
+
+	int i; // contador de laço
+	int d=0; // posição do delimitador
+	int tam = strlen(string); // tamanho da string
+	char *str2; // string cortada
+
+	/* Verifica qual a posição do delimitador na string */
+	for(i=0;i<tam;i++){
+
+		if(string[i]==delim[0]){
+			break;
+		}
+
+		d++;
+	}
+
+	char s2[tam+1];// string temporária
+
+	/* 's2' recebe um pedaço de 'string' */
+	for(i=d+1;i<tam;i++){
+		s2[i-d-1]=string[i];
+	}
+
+	/* último caractere é NULL */
+	s2[tam+1]='\0';
+
+	str2 = &s2[0];
+
+	return str2;
+	
+}
+
+
 /* Estrutura da tabela simbólica de parâmetros */
 typedef struct {
 
@@ -100,11 +170,9 @@ void init(int tam, char **p){
    através da comparação com 'str' (string temporária que varre uma a uma
    as chaves da tabela de parâmetros).
    os valores da tabela estão armazenados na forma chave=valor.
-
    Se o Parâmetro está na tabela de parâmetros, a função get retorna 'True' 
    e atribui o valor do parâmetro ao endereço passado em *pi.
    Se o parâmetro não for encontrado retorna 'false'.
-
 */
 
 bool getint(char *string, int *pi) {
@@ -116,10 +184,10 @@ bool getint(char *string, int *pi) {
 
 	for (i=1;i<tabela.tam;i++){
 
-		str=strdlm(tabela.pars[i],"=");
+		str=istrdlm(tabela.pars[i],"=");
 
 		if(strcmp(string,str)==0) {
-			*pi=atoi(strdlm_r(tabela.pars[i],"="));			
+			*pi=atoi(istrdlm_r(tabela.pars[i],"="));			
 			resp=true;
 			break;
 		}
@@ -137,10 +205,10 @@ bool getfloat(char *string, float *pi) {
 
 	for (i=1;i<tabela.tam;i++){
 
-		str=strdlm(tabela.pars[i],"=");
+		str=istrdlm(tabela.pars[i],"=");
 
 		if(strcmp(string,str)==0) {
-			*pi=atof(strdlm_r(tabela.pars[i],"="));			
+			*pi=atof(istrdlm_r(tabela.pars[i],"="));			
 			resp=true;
 			break;
 		}
@@ -158,10 +226,10 @@ bool getdouble(char *string, double *pi) {
 
 	for (i=1;i<tabela.tam;i++){
 
-		str=strdlm(tabela.pars[i],"=");
+		str=istrdlm(tabela.pars[i],"=");
 
 		if(strcmp(string,str)==0) {
-			*pi=atof(strdlm_r(tabela.pars[i],"="));			
+			*pi=atof(istrdlm_r(tabela.pars[i],"="));			
 			resp=true;
 			break;
 		}
